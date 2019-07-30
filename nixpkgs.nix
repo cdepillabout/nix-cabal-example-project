@@ -7,29 +7,34 @@ let
   };
 
   overlay = self: super: {
-    haskell = super.haskell // {
-      packageOverrides = hself: hsuper:
-        super.haskell.packageOverrides hself hsuper // {
-          package1 = hself.callCabal2nix "package1" ./package1 {};
+    our-haskell-pkg-set = self.haskell.packages.ghc864.override {
+      overrides = hself: hsuper: {
 
-          package2 = hself.callCabal2nix "package2" ./package2 {};
+        package1 = hself.callCabal2nix "package1" ./package1 {};
 
-          our-packages = [
-            hself.package1
-            hself.package2
-          ];
+        package2 = hself.callCabal2nix "package2" ./package2 {};
 
-          our-executables = [
-            hself.package2
-          ];
-        };
+        our-local-pkgs = [
+          hself.package1
+          hself.package2
+        ];
+
+        conduit = hself.callHackage "conduit" "1.3.1" {};
+      };
     };
 
-    our-haskell-pkg-set = self.haskell.packages.ghc864;
-
     our-shell = self.our-haskell-pkg-set.shellFor {
-      packages = pkgs: pkgs.our-packages;
-      nativeBuildInputs = [ self.cabal-install self.ghcid ];
+      packages = pkgs: pkgs.our-local-pkgs;
+      nativeBuildInputs = [
+        self.cabal-install
+        self.haskellPackages.ghcid
+      ];
+    };
+
+    our-project-exes = self.buildEnv {
+      name = "nix-cabal-example-project";
+      paths = self.our-haskell-pkg-set.our-local-pkgs;
+      extraOutputsToInstall = [ "dev" "out" ];
     };
   };
 

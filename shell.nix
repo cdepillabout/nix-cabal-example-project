@@ -1,2 +1,5 @@
 
-(import ./nixpkgs.nix).our-shell
+let
+  nixpkgs = import ./nixpkgs.nix;
+
+in nixpkgs.our-shell

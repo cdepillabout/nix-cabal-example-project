@@ -20,24 +20,21 @@ source-repository head
   location: https://github.com/cdepillabout/nix-cabal-example-project
 
 library
-  exposed-modules:  Lib
+  exposed-modules:  Package2.Lib
   other-modules:    Paths_package2
   hs-source-dirs:   src
   build-depends:    base >=4.7 && <5
+                  , aeson
                   , package1
   default-language: Haskell2010
 
--- executable nix-cabal-example-project-exe
---   main-is: Main.hs
---   other-modules:
---       Paths_nix_cabal_example_project
---   hs-source-dirs:
---       app
---   ghc-options: -threaded -rtsopts -with-rtsopts=-N
---   build-depends:
---       base >=4.7 && <5
---     , nix-cabal-example-project
---   default-language: Haskell2010
+executable example-exe
+  main-is:          Main.hs
+  hs-source-dirs:   app
+  ghc-options:      -threaded -rtsopts -with-rtsopts=-N
+  build-depends:    base >=4.7 && <5
+                  , package2
+  default-language: Haskell2010
 
 test-suite tests
   type:             exitcode-stdio-1.0
@@ -46,4 +43,5 @@ test-suite tests
   ghc-options:      -threaded -rtsopts -with-rtsopts=-N
   build-depends:    base >=4.7 && <5
                   , package2
+                  , tasty
   default-language: Haskell2010

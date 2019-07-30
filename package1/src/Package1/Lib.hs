@@ -1,4 +1,4 @@
-module Lib
+module Package1.Lib
     ( someFunc
     ) where
 
