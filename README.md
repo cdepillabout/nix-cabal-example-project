@@ -1,0 +1,1 @@
+# nix-cabal-example-project
